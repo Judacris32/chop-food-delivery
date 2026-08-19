@@ -233,7 +233,7 @@ export default function Home() {
           {/* Full bleed suya image */}
           <div className="absolute inset-0">
             <img
-              src="/foods/suya-1.jpg"
+              src="/foods/suya-2.jpg"
               alt="Suya at midnight"
               className="w-full h-full object-cover"
             />
