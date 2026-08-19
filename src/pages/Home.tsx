@@ -1,6 +1,7 @@
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { ArrowRight, Clock, Star, Zap } from 'lucide-react'
+import { useState, useEffect } from 'react'
 import { restaurants, cuisineCategories } from '../data/restaurants'
 import { formatPrice, formatDeliveryTime } from '../utils/format'
 import { useThemeStore } from '../store/useThemeStore'
@@ -9,40 +10,71 @@ import { cn } from '../utils/cn'
 const featured = restaurants.filter((r) => r.isFeatured)
 const popular  = restaurants.filter((r) => r.isPopular)
 
-// Hero: party jollof platter | suya on skewers | cheesy shawarma
-const heroImages = [
-  { src: '/foods/rice-meat-6.jpg',  label: 'Party Jollof Rice & Grilled Chicken' },
-  { src: '/foods/suya-1.jpg',       label: 'Suya on Skewers with Tomato & Onion' },
-  { src: '/foods/shawama-3.jpg',    label: 'Cheesy Chicken Shawarma'              },
+const heroSlides = [
+  { src: '/foods/rice-meat-6.jpg',   label: 'Party Jollof Rice & Grilled Chicken' },
+  { src: '/foods/suya-1.jpg',        label: 'Beef Suya on Skewers'                },
+  { src: '/foods/shawama-3.jpg',     label: 'Cheesy Chicken Shawarma'             },
+  { src: '/foods/chips-chicken.jpg', label: 'Peppered Chicken & Plantain'         },
+  { src: '/foods/egusi-pounded-yam.jpg', label: 'Egusi Soup & Pounded Yam'       },
 ]
 
 export default function Home() {
   const isDark = useThemeStore((s) => s.isDark)
+  const [current, setCurrent] = useState(0)
+
+  // Auto-advance every 4 seconds
+  useEffect(() => {
+    const t = setInterval(() => setCurrent((c) => (c + 1) % heroSlides.length), 4000)
+    return () => clearInterval(t)
+  }, [])
 
   return (
     <div className="pb-20">
 
-      {/* ── Hero ── */}
+      {/* ── Hero slideshow ── */}
       <section className="relative min-h-[100svh] flex flex-col justify-end overflow-hidden">
-        <div className="absolute inset-0 flex">
-          {heroImages.map(({ src, label }, i) => (
-            <motion.div key={i} className="flex-1 overflow-hidden"
-              initial={{ scale: 1.08, opacity: 0 }}
-              animate={{ scale: 1,    opacity: 1 }}
-              transition={{ duration: 1.5, delay: i * 0.12, ease: [0.22, 1, 0.36, 1] }}>
-              <img src={src} alt={label} className="w-full h-full object-cover" />
-            </motion.div>
+
+        {/* Slides */}
+        <AnimatePresence mode="sync">
+          <motion.div
+            key={current}
+            initial={{ opacity: 0, scale: 1.06 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+            className="absolute inset-0"
+          >
+            <img
+              src={heroSlides[current].src}
+              alt={heroSlides[current].label}
+              className="w-full h-full object-cover"
+            />
+          </motion.div>
+        </AnimatePresence>
+
+        {/* Gradient */}
+        <div className="absolute inset-0 pointer-events-none"
+          style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.97) 0%, rgba(0,0,0,0.6) 40%, rgba(0,0,0,0.15) 100%)' }} />
+
+        {/* Dot indicators */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+          {heroSlides.map((_, i) => (
+            <button key={i} onClick={() => setCurrent(i)}
+              className="transition-all duration-300 rounded-full"
+              style={{
+                width: i === current ? '24px' : '6px',
+                height: '6px',
+                background: i === current ? '#e8381a' : 'rgba(255,255,255,0.35)',
+              }} />
           ))}
         </div>
-        <div className="absolute inset-0"
-          style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.97) 0%, rgba(0,0,0,0.8) 28%, rgba(0,0,0,0.45) 55%, rgba(0,0,0,0.15) 100%)' }} />
 
-        <div className="relative z-10 w-full max-w-3xl mx-auto px-5 md:px-8 pb-16 md:pb-28 pt-32 text-center flex flex-col items-center">
+        <div className="relative z-10 w-full max-w-3xl mx-auto px-5 md:px-8 pb-24 md:pb-28 pt-32 text-center flex flex-col items-center">
           <motion.h1
             initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.65, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
             className="font-display leading-[0.95] mb-6"
-            style={{ fontSize: 'clamp(3.5rem, 9vw, 7rem)', color: 'white', fontWeight: 300, letterSpacing: '-0.02em' }}>
+            style={{ fontSize: 'clamp(3.2rem, 9vw, 7rem)', color: 'white', fontWeight: 300, letterSpacing: '-0.02em' }}>
             Jollof. Suya.<br />
             <em style={{ color: '#e8381a', fontStyle: 'italic', fontWeight: 400 }}>Delivered.</em>
           </motion.h1>
@@ -60,13 +92,13 @@ export default function Home() {
             transition={{ duration: 0.5, delay: 0.3 }}
             className="text-sm md:text-base max-w-md mb-9 leading-relaxed"
             style={{ color: 'rgba(255,255,255,0.5)' }}>
-            Party jollof with the smoky bottom, suya with the right amount of yaji, shawarma that actually has filling — from Lagos and Abuja's best spots.
+            Party jollof with the smoky bottom, suya with the right amount of yaji, shawarma that actually has filling, from Lagos and Abuja's best spots.
           </motion.p>
 
           <motion.div
             initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.4 }}
-            className="flex flex-col sm:flex-row gap-3 justify-center">
+            className="flex flex-col sm:flex-row gap-3 justify-center w-full sm:w-auto">
             <Link to="/restaurants"
               className="inline-flex items-center justify-center gap-2 bg-pepper-500 hover:bg-pepper-400 text-white font-semibold px-8 py-4 rounded-2xl transition-colors text-base group">
               Order now
@@ -75,23 +107,15 @@ export default function Home() {
             <Link to="/restaurants?cat=Nigerian"
               className="inline-flex items-center justify-center gap-2 text-white font-medium px-8 py-4 rounded-2xl transition-all duration-200 text-base"
               style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)' }}
-              onMouseEnter={(e) => {
-                const el = e.currentTarget as HTMLAnchorElement
-                el.style.background = 'rgba(255,255,255,0.22)'
-                el.style.borderColor = 'rgba(255,255,255,0.4)'
-              }}
-              onMouseLeave={(e) => {
-                const el = e.currentTarget as HTMLAnchorElement
-                el.style.background = 'rgba(255,255,255,0.1)'
-                el.style.borderColor = 'rgba(255,255,255,0.2)'
-              }}>
+              onMouseEnter={(e) => { const el = e.currentTarget as HTMLAnchorElement; el.style.background = 'rgba(255,255,255,0.22)' }}
+              onMouseLeave={(e) => { const el = e.currentTarget as HTMLAnchorElement; el.style.background = 'rgba(255,255,255,0.1)' }}>
               Browse Nigerian food
             </Link>
           </motion.div>
 
           <motion.div
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }}
-            className="flex items-center justify-center gap-6 mt-10 flex-wrap">
+            className="flex items-center justify-center gap-5 md:gap-8 mt-10 flex-wrap">
             {[
               { icon: Zap,   text: '15 min average delivery'  },
               { icon: Star,  text: '4.7 avg restaurant rating' },
@@ -102,13 +126,6 @@ export default function Home() {
               </div>
             ))}
           </motion.div>
-
-          <motion.p
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2 }}
-            className="text-xs mt-10 tracking-widest uppercase"
-            style={{ color: 'rgba(255,255,255,0.2)' }}>
-            Scroll to see what's on ↓
-          </motion.p>
         </div>
       </section>
 
@@ -144,21 +161,22 @@ export default function Home() {
 
       {/* ── Featured restaurants ── */}
       <section className="max-w-7xl mx-auto px-5 md:px-8 pt-14 md:pt-20">
-        <div className="text-center max-w-xl mx-auto mb-10">
-          <p className="text-pepper-500 text-xs tracking-[0.3em] uppercase mb-3">Handpicked</p>
-          <h2 className="font-display text-3xl md:text-4xl font-light mb-3" style={{ color: isDark ? 'white' : '#1c1917' }}>
-            Worth the wait
-          </h2>
-          <p className="text-sm leading-relaxed mb-5" style={{ color: isDark ? 'rgba(255,255,255,0.4)' : '#78716c' }}>
-            Restaurants our team has actually eaten at.<br className="hidden md:block" />
-            We don't list what we haven't tasted.
-          </p>
+        <div className="flex items-end justify-between mb-3">
+          <div>
+            <p className="text-pepper-500 text-xs tracking-[0.3em] uppercase mb-1.5">Handpicked</p>
+            <h2 className={cn('font-display text-3xl md:text-4xl font-light', isDark ? 'text-white' : 'text-stone-900')}>
+              Worth the wait
+            </h2>
+          </div>
           <Link to="/restaurants"
-            className="inline-flex items-center gap-1.5 text-sm font-medium text-pepper-500 hover:text-pepper-400 transition-colors group">
-            See all restaurants
-            <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+            className={cn('text-sm flex items-center gap-1 group transition-colors',
+              isDark ? 'text-white/40 hover:text-white' : 'text-stone-400 hover:text-stone-900')}>
+            See all <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
           </Link>
         </div>
+        <p className={cn('text-sm mb-8', isDark ? 'text-white/30' : 'text-stone-400')}>
+          Restaurants our team has actually eaten at. We don't list what we haven't tasted.
+        </p>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           {featured.map((r, i) => (
@@ -303,7 +321,7 @@ export default function Home() {
           </h2>
           <p className="text-sm leading-relaxed" style={{ color: isDark ? 'rgba(255,255,255,0.4)' : '#78716c' }}>
             These are the places people keep coming back to.<br className="hidden md:block" />
-            Not sponsored just genuinely good.
+            Not sponsored, just genuinely good.
           </p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
