@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { useSearchParams, Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { SlidersHorizontal, X, Star, Clock, ChevronDown, Search } from 'lucide-react'
@@ -25,6 +25,12 @@ export default function Restaurants() {
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [maxFee,     setMaxFee]     = useState(1500)
   const [onlyOpen,   setOnlyOpen]   = useState(false)
+
+  // Sync filters whenever URL params change (e.g. clicking navbar links)
+  useEffect(() => {
+    setActivecat(searchParams.get('cat') || 'all')
+    setQuery(searchParams.get('q') || '')
+  }, [searchParams])
 
   const activeFilters = [
     onlyOpen ? 1 : 0,

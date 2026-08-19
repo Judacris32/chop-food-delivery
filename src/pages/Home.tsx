@@ -144,22 +144,21 @@ export default function Home() {
 
       {/* ── Featured restaurants ── */}
       <section className="max-w-7xl mx-auto px-5 md:px-8 pt-14 md:pt-20">
-        <div className="flex items-end justify-between mb-3">
-          <div>
-            <p className="text-pepper-500 text-xs tracking-[0.3em] uppercase mb-1.5">Handpicked</p>
-            <h2 className={cn('font-display text-3xl md:text-4xl font-light', isDark ? 'text-white' : 'text-stone-900')}>
-              Worth the wait
-            </h2>
-          </div>
+        <div className="text-center max-w-xl mx-auto mb-10">
+          <p className="text-pepper-500 text-xs tracking-[0.3em] uppercase mb-3">Handpicked</p>
+          <h2 className="font-display text-3xl md:text-4xl font-light mb-3" style={{ color: isDark ? 'white' : '#1c1917' }}>
+            Worth the wait
+          </h2>
+          <p className="text-sm leading-relaxed mb-5" style={{ color: isDark ? 'rgba(255,255,255,0.4)' : '#78716c' }}>
+            Restaurants our team has actually eaten at.<br className="hidden md:block" />
+            We don't list what we haven't tasted.
+          </p>
           <Link to="/restaurants"
-            className={cn('text-sm flex items-center gap-1 group transition-colors',
-              isDark ? 'text-white/40 hover:text-white' : 'text-stone-400 hover:text-stone-900')}>
-            See all <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-pepper-500 hover:text-pepper-400 transition-colors group">
+            See all restaurants
+            <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
           </Link>
         </div>
-        <p className={cn('text-sm mb-8', isDark ? 'text-white/30' : 'text-stone-400')}>
-          Restaurants our team has actually eaten at. We don't list what we haven't tasted.
-        </p>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           {featured.map((r, i) => (
@@ -216,7 +215,7 @@ export default function Home() {
           {/* Full bleed suya image */}
           <div className="absolute inset-0">
             <img
-              src="/foods/suya-2.jpg"
+              src="/foods/suya-1.jpg"
               alt="Suya at midnight"
               className="w-full h-full object-cover"
             />
@@ -297,15 +296,16 @@ export default function Home() {
 
       {/* ── Popular now ── */}
       <section className="max-w-7xl mx-auto px-5 md:px-8">
-        <div className="mb-3">
-          <p className="text-pepper-500 text-xs tracking-[0.3em] uppercase mb-1.5">Moving fast</p>
-          <h2 className={cn('font-display text-3xl md:text-4xl font-light', isDark ? 'text-white' : 'text-stone-900')}>
+        <div className="text-center max-w-xl mx-auto mb-10">
+          <p className="text-pepper-500 text-xs tracking-[0.3em] uppercase mb-3">Moving fast</p>
+          <h2 className="font-display text-3xl md:text-4xl font-light mb-3" style={{ color: isDark ? 'white' : '#1c1917' }}>
             Popular right now
           </h2>
+          <p className="text-sm leading-relaxed" style={{ color: isDark ? 'rgba(255,255,255,0.4)' : '#78716c' }}>
+            These are the places people keep coming back to.<br className="hidden md:block" />
+            Not sponsored just genuinely good.
+          </p>
         </div>
-        <p className={cn('text-sm mb-8', isDark ? 'text-white/30' : 'text-stone-400')}>
-          These are the places people keep coming back to. Not sponsored — just genuinely good.
-        </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {popular.map((r, i) => (
             <motion.div key={r.id}

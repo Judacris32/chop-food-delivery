@@ -161,7 +161,7 @@ export default function Footer() {
                 <span className="font-display text-lg font-medium" style={{ color: textPrimary }}>Chop</span>
               </div>
               <p className="text-sm leading-relaxed max-w-xs mb-5" style={{ color: textMuted }}>
-                Real Nigerian food from the restaurants you love — delivered fast across Lagos and Abuja.
+                Real Nigerian food from the restaurants you love, delivered fast across Lagos and Abuja.
               </p>
 
               {/* Social icons */}
